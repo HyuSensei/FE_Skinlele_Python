@@ -10,7 +10,7 @@ const configViewEngine = require("./config/viewEngine");
 const session = require("express-session");
 const flash = require("express-flash");
 const useRouter = require("./routes/user");
-
+const adminRouter = require("./routes/admin");
 app.use(
   session({
     secret: "keyboard cat",
@@ -92,7 +92,7 @@ app.use((req, res, next) => {
 // app.use("/", webRoute);
 // app.use("/api/v1/", apiRoute);
 app.use("/", useRouter);
-
+app.use("/", adminRouter);
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

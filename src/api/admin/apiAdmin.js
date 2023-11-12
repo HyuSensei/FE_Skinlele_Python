@@ -1,6 +1,5 @@
 const axios = require("axios");
 const jwt = require("jsonwebtoken");
-const userService = require("../../services/userService");
 
 require("dotenv").config();
 function formatVND(amount) {
@@ -31,25 +30,28 @@ const verifyToken = (token) => {
 };
 const getHome = async (req, res) => {
     try {
-        let Statistics = await axios.get(process.env.BASE_URL + `statistics`);
-        let statisticsByMonht = await axios.get(process.env.BASE_URL + `statisticsByMonht`);
-        let statisticsByYear = await axios.get(process.env.BASE_URL + `statisticsByYear`);
-        let order_productDesc = await axios.get(process.env.BASE_URL + `order_product/desc`);
-        let categoriesSale = await axios.get(process.env.BASE_URL + `categories/sale`);
-        let countAllRate = await axios.get(process.env.BASE_URL + `allCountRate`);
-        console.log("rateaksdj:", countAllRate.data.countRate);
-        const Monht = formatVND(statisticsByMonht.data.data)
-        const Year = formatVND(statisticsByYear.data.data)
-        //console.log(categoriesSale.data.categories)
+        let Statistics = await axios.get(process.env.BASE_URL + `getStatistics`);
+        let statisticsByMonht = await axios.get(process.env.BASE_URL + `getStatisticsByMonth`);
+        let statisticsByYear = await axios.get(process.env.BASE_URL + `getStatisticsByYear`);
+        let order_productDesc = await axios.get(process.env.BASE_URL + `getTopProductSale`);
+        let categoriesSale = await axios.get(process.env.BASE_URL + `getProductCategory`);
+        let countAllRate = await axios.get(process.env.BASE_URL + `countRate`);
+        //console.log("rate:", countAllRate.data);
+        const Monht = formatVND(statisticsByMonht.data.StatisticsByMonth)
+        const Year = formatVND(statisticsByYear.data.total_revenue)
+        let productAllRate = await axios.get(process.env.BASE_URL + `getProductRate`);
+
+        console.log(categoriesSale.data.product)
+        //console.log(productAllRate.data)
         return res.render("admin/indexAdmin.ejs",
             {
-                Statistics: Statistics.data.data,
+                Statistics: Statistics.data,
                 statisticsByMonht: Monht,
                 statisticsByYear: Year,
-                order_productDesc: order_productDesc.data.data,
-                categoriesSale: categoriesSale.data.categories,
-                countAllRate: countAllRate.data.countRate
-
+                order_productDesc: order_productDesc.data.product,
+                categoriesSale: categoriesSale.data.product,
+                countAllRate: countAllRate.data.countrate,
+                productAllRate: productAllRate.data.data
             });
     } catch (error) {
         console.log(error);
@@ -58,6 +60,7 @@ const getHome = async (req, res) => {
 const loginAdmin = async (req, res) => {
     let cookie = req.cookies;
     let erro = req.flash("erro");
+    //console.log(cookie.jwtadmin)
     if (cookie && cookie.jwtadmin) {
         let token = cookie.jwtadmin;
         let decoded = verifyToken(token);
@@ -65,23 +68,23 @@ const loginAdmin = async (req, res) => {
             res.cookie("adminUserId", decoded.id, {
                 maxAge: 24 * 60 * 60 * 1000,
             });
-            let getUser = await userService.detailUser(decoded.id);
-            res.cookie("adminname", getUser.name, {
-                maxAge: 24 * 60 * 60 * 1000,
-            });
-            res.cookie("adminusername", getUser.username, {
-                maxAge: 24 * 60 * 60 * 1000,
-            });
-            res.cookie("adminphone", getUser.phone, {
-                maxAge: 24 * 60 * 60 * 1000,
-            });
-            res.cookie("adminemail", getUser.email, {
-                maxAge: 24 * 60 * 60 * 1000,
-            });
-            res.cookie("adminaddress", getUser.address, {
-                maxAge: 24 * 60 * 60 * 1000,
-            });
-            return res.redirect("/admin");
+            // let getUser = await userService.detailUser(decoded.id);
+            // res.cookie("adminname", getUser.name, {
+            //     maxAge: 24 * 60 * 60 * 1000,
+            // });
+            // res.cookie("adminusername", getUser.username, {
+            //     maxAge: 24 * 60 * 60 * 1000,
+            // });
+            // res.cookie("adminphone", getUser.phone, {
+            //     maxAge: 24 * 60 * 60 * 1000,
+            // });
+            // res.cookie("adminemail", getUser.email, {
+            //     maxAge: 24 * 60 * 60 * 1000,
+            // });
+            // res.cookie("adminaddress", getUser.address, {
+            //     maxAge: 24 * 60 * 60 * 1000,
+            // });
+            return res.redirect("/");
         } else {
             return res.render("admin/loginAdmin.ejs", { erro });
         }
@@ -92,10 +95,12 @@ const loginAdmin = async (req, res) => {
 const handleLoginAdmin = async (req, res) => {
     try {
         let data = await axios.post(process.env.BASE_URL + `loginAdmin`, req.body);
+
         if (data.data.success == false) {
             req.flash("erro", `${data.data.message}`);
         } else {
             req.flash("success", `${data.data.message}`);
+            console.log(data.data.user.id)
             res.cookie("adminUserId", data.data.user.id, {
                 maxAge: 24 * 60 * 60 * 1000,
             });
@@ -103,7 +108,7 @@ const handleLoginAdmin = async (req, res) => {
                 maxAge: 24 * 60 * 60 * 1000,
             });
         }
-        console.log(data.data);
+        //console.log(data.data);
         return res.redirect("/loginAdmin");
     } catch (error) {
         console.log(error);

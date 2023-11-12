@@ -19,109 +19,123 @@
 
                         <!-- Topbar -->
                         <%- include('./block/topnav.ejs') %>
-                        <!-- End of Topbar -->
+                            <!-- End of Topbar -->
 
-                        <!-- Begin Page Content -->
-                        <div class="container-fluid">
+                            <!-- Begin Page Content -->
+                            <div class="container-fluid">
 
-                            <!-- Page Heading -->
-                            <h1 class="h3 mb-2 text-gray-800">Danh người dùng</h1>
+                                <!-- Page Heading -->
+                                <h1 class="h3 mb-2 text-gray-800">Danh người dùng</h1>
 
-                            <!-- DataTales Example -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3" style="text-align: center;">
-                                    <form action="/admin/user/" method="post"
-                                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                                        <div class="input-group" style="border: 1px solid black; border-radius: 6px ;">
-                                            <input type="text" class="form-control bg-light border-0 small"
-                                                placeholder="nhập tên người dùng" aria-label="Search"
-                                                aria-describedby="basic-addon2" name="username" <% if(typeof nameSearch
-                                                !=='undefined' ){ %>
-                                            value="<%=nameSearch%>"
-                                                <%}%>
+                                <!-- DataTales Example -->
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3" style="text-align: center;">
+                                        <form action="/admin/user/" method="post"
+                                            class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                                            <div class="input-group"
+                                                style="border: 1px solid black; border-radius: 6px ;">
+                                                <input type="text" class="form-control bg-light border-0 small"
+                                                    placeholder="nhập tên người dùng" aria-label="Search"
+                                                    aria-describedby="basic-addon2" name="username" <% if(typeof
+                                                    nameSearch !=='undefined' ){ %>
+                                                value="<%=nameSearch%>"
+                                                    <%}%>
 
-                                                    >
-                                                    <div class="input-group-append">
-                                                        <button class="btn btn-primary" type="submit">
-                                                            <i class="fas fa-search fa-sm"></i>
-                                                        </button>
-                                                    </div>
+                                                        >
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-primary" type="submit">
+                                                                <i class="fas fa-search fa-sm"></i>
+                                                            </button>
+                                                        </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div class="card-body">
+
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered" id="dataTable" width="100%"
+                                                cellspacing="0">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 50%;">Tên người dùng</th>
+                                                        <th style="text-align: center;">Email</th>
+                                                        <th style="text-align: center;">UserName</th>
+                                                        <th style="text-align: center; width: 10%;">Chỉnh sửa</th>
+                                                        <th style="text-align: center; width: 10%;">Xóa người dùng</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <% if(typeof dataUser !=='undefined' ){ %>
+                                                        <% dataUser.forEach(user=> { %>
+
+                                                            <tr>
+                                                                <td>
+                                                                    <%= user.name %>
+                                                                </td>
+                                                                <td style="text-align: center;">
+                                                                    <%= user.email %>
+                                                                </td>
+                                                                <td style="text-align: center;">
+                                                                    <%= user.username %>
+                                                                </td>
+
+                                                                <td style="text-align: center;">
+
+                                                                    <a href="/admin/user/update/<%= user.id %>">
+                                                                        <button type="button"
+                                                                            style="border: none; background-color: transparent; width: auto;"
+                                                                            value="">
+
+                                                                            <i style="color:  #858796;"
+                                                                                class="fas fa-pen"></i>
+                                                                        </button>
+                                                                    </a>
+
+                                                                </td>
+                                                                <td style="text-align: center;">
+                                                                    <a href="/admin/user/delete/<%= user.id %>">
+                                                                        <button type="button"
+                                                                            style="border: none; background-color: transparent; width: auto;"
+                                                                            id="btn2"
+                                                                            onclick="return confirm('Bạn có muốn xóa người dùng này không')">
+                                                                            <i style="color:  #858796;"
+                                                                                class="fas fa-trash"></i>
+                                                                        </button>
+                                                                    </a>
+
+                                                                </td>
+                                                            </tr>
+                                                            <% }); %>
+                                                                <% }%>
+
+                                                </tbody>
+
+                                            </table>
+                                            <div style="display: flex; justify-content: center; width: 100%;">
+                                                <% if(typeof countUser !=='undefined' ){ const
+                                                    totalPages=Math.ceil((countUser) / 6); for(i=1;i<=totalPages;i++){
+                                                    %>
+                                                    <a href=<%=(typeof nameSearch !=='undefined' ) ?
+                                                        `/admin/user/${nameSearch}/page/${i}` : `/admin/user/page/${i}`
+                                                        %> class="page-link">
+                                                        <%= i %>
+                                                    </a>
+                                                    <% } } %>
+
+                                            </div>
+                                            <% if(typeof message !=='undefined' ){ %>
+                                                <p style="width: 100%; text-align: center;">
+                                                    <%=message%>
+                                                </p>
+                                                <% } %>
                                         </div>
-                                    </form>
-
-                                </div>
-                                <div class="card-body">
-
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width: 50%;">Tên người dùng</th>
-                                                    <th style="text-align: center;">Email</th>
-                                                    <th style="text-align: center;">UserName</th>
-                                                    <th style="text-align: center; width: 10%;">Chỉnh sửa</th>
-                                                    <th style="text-align: center; width: 10%;">Xóa người dùng</th>
-
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <% if(typeof dataUser !=='undefined' ){ %>
-                                                    <% dataUser.forEach(user=> { %>
-
-                                                        <tr>
-                                                            <td>
-                                                                <%= user.name %>
-                                                            </td>
-                                                            <td style="text-align: center;">
-                                                                <%= user.email %>
-                                                            </td>
-                                                            <td style="text-align: center;">
-                                                                <%= user.username %>
-                                                            </td>
-
-                                                            <td style="text-align: center;">
-
-                                                                <a href="/admin/user/update/<%= user.id %>">
-                                                                    <button type="button"
-                                                                        style="border: none; background-color: transparent; width: auto;"
-                                                                        value="">
-
-                                                                        <i style="color:  #858796;"
-                                                                            class="fas fa-pen"></i>
-                                                                    </button>
-                                                                </a>
-
-                                                            </td>
-                                                            <td style="text-align: center;">
-                                                                <a href="/admin/user/delete/<%= user.id %>">
-                                                                    <button type="button"
-                                                                        style="border: none; background-color: transparent; width: auto;"
-                                                                        id="btn2"
-                                                                        onclick="return confirm('Bạn có muốn xóa người dùng này không')">
-                                                                        <i style="color:  #858796;"
-                                                                            class="fas fa-trash"></i>
-                                                                    </button>
-                                                                </a>
-
-                                                            </td>
-                                                        </tr>
-                                                        <% }); %>
-                                                        <% }%>
-
-                                            </tbody>
-
-                                        </table>
-                                        <% if(typeof message !=='undefined' ){ %>
-                                            <p style="width: 100%; text-align: center;">
-                                                <%=message%>
-                                            </p>
-                                            <% } %>
                                     </div>
                                 </div>
-                            </div>
 
-                        </div>
-                        <!-- /.container-fluid -->
+                            </div>
+                            <!-- /.container-fluid -->
 
                     </div>
                     <!-- End of Main Content -->
@@ -190,5 +204,8 @@
 
         <%- include('./block/footer.ejs') %>
     </body>
+    <script>
+
+    </script>
 
 </html>

@@ -30,7 +30,7 @@
                                 <!-- DataTales Example -->
                                 <div class="card shadow mb-4">
                                     <div class="card-header py-3" style="text-align: center;">
-                                        
+
 
                                     </div>
                                     <div class="card-body">
@@ -45,7 +45,8 @@
                                                         <th style="text-align: center;">Địa chỉ</th>
                                                         <th style="text-align: center;">Payment</th>
                                                         <th style="text-align: center;">Thông tin đơn hàng</th>
-                                                        <th style="text-align: center; width: 20%;">Trạng thái đơn hàng</th>
+                                                        <th style="text-align: center; width: 20%;">Trạng thái đơn hàng
+                                                        </th>
                                                         <th style="text-align: center; width: 10%;">Xóa đơn hàng</th>
                                                     </tr>
                                                 </thead>
@@ -54,35 +55,54 @@
                                                         <% dataOrder.forEach(order=> { %>
 
                                                             <tr>
-                                                                <td><%= order.name %></td>
-                                                                <td><%= order.phone %></td>
-                                                                <td><%= order.address %></td>
-                                                                <td><%= order.payment %></td>
                                                                 <td>
-                                                                   
-                                                                    <% order.Order_Products.forEach(product=>{ %>
-                                                                        <li><%= product.Product.name %> (sl: <%= product.quantity %>)</li>
-                                                                    <% }) %>
-                                                                    <p style="text-align: right; margin-top: 1rem;">Tổng tiền: <%= order.total %> VNĐ </p>
-                                                                    
+                                                                    <%= order.name %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order.phone %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order.address %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= order.payment %>
+                                                                </td>
+                                                                <td>
+
+                                                                    <% order.order_product.forEach(product=>{ %>
+                                                                        <li>
+                                                                            <%= product.product.name %> (sl: <%=
+                                                                                    product.quantity %>)
+                                                                        </li>
+                                                                        <% }) %>
+                                                                            <p
+                                                                                style="text-align: right; margin-top: 1rem;">
+                                                                                Tổng tiền: <%= order.total %> VNĐ </p>
+
                                                                 </td>
                                                                 <td style="text-align: center;">
-                                                                    
-                                                                    <% if(order.status==2){  %>
-                                                                        <p style="color: rgba(0, 255, 170, 0.724);">Đã giao hàng</p>
-                                                                    <% }else if(order.status==1){ %>
-                                                                        <p style="color: yellowgreen;">Đang giao hàng</p>
-                                                                    <% }else if(order.status==0){ %>
-                                                                        <p>Chưa xác nhận</p>
-                                                                        <a href="/admin/order/confirm/<%= order.id %>"><button type="button" class="btn btn-success">Xác nhận giao hàng</button></a>
-                                                                        
-                                                                    <% } %>
-                                                                    
-                                                                        
-                                                                    
+
+                                                                    <% if(order.status==2){ %>
+                                                                        <p style="color: rgba(0, 255, 170, 0.724);">Đã
+                                                                            giao hàng</p>
+                                                                        <% }else if(order.status==1){ %>
+                                                                            <p style="color: yellowgreen;">Đang giao
+                                                                                hàng</p>
+                                                                            <% }else if(order.status==0){ %>
+                                                                                <p>Chưa xác nhận</p>
+                                                                                <a
+                                                                                    href="/admin/order/confirm/<%= order.id %>"><button
+                                                                                        type="button"
+                                                                                        class="btn btn-success">Xác nhận
+                                                                                        giao hàng</button></a>
+
+                                                                                <% } %>
+
+
+
                                                                 </td>
-                                                                
-                                                                
+
+
                                                                 <td style="text-align: center;">
                                                                     <a href="/admin/order/delete/<%= order.id %>">
                                                                         <button type="button"
@@ -102,7 +122,16 @@
                                                 </tbody>
 
                                             </table>
-                                            
+                                            <div style="display: flex; justify-content: center; width: 100%;">
+                                                <% if(typeof countdataOrder !=='undefined' ){ const
+                                                    totalPages=Math.ceil((countdataOrder) / 3);
+                                                    for(i=1;i<=totalPages;i++){ %>
+                                                    <a href="/admin/order/page/<%=i%>" class="page-link">
+                                                        <%= i %>
+                                                    </a>
+                                                    <% } } %>
+
+                                            </div>
                                             <% if(typeof message !=='undefined' ){ %>
                                                 <p style="width: 100%; text-align: center;">
                                                     <%=message%>
