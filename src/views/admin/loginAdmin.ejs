@@ -24,6 +24,14 @@
                                     </div>
                                     <form class="user" method="POST" action="/loginAdmin">
                                         <div class="form-group">
+                                            <% if(erro.length>0) { %>
+                                                <div>
+                                                    <p
+                                                        style="width: 100%;background-color: #f2dede;color:#b55947;margin-bottom: 20px;height: auto;border-radius: 10px;padding-left: 10px;font-size: 16px;">
+                                                        <%= erro %>
+                                                    </p>
+                                                </div>
+                                                <% } %>
                                             <input type="text" class="form-control form-control-user"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
                                                 placeholder="Nhập username..." name="username">
@@ -39,14 +47,7 @@
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <% if(erro.length>0) { %>
-                                            <div>
-                                                <p
-                                                    style="width: 100%;padding-top: 12px;background-color: #f2dede;color:#b55947;margin-bottom: 20px;height: auto;border-radius: 10px;padding-left: 10px;font-size: 16px;">
-                                                    <%= erro %>
-                                                </p>
-                                            </div>
-                                        <% } %>
+                                        
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
                                             Login
                                         </button>
